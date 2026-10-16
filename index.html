@@ -4,57 +4,375 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon premier site</title>
+  <title>KeyPick — Ton setup, tes choix</title>
+  <meta name="description" content="Découvre et compare du matériel gaming pour créer ton setup idéal.">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #101124;
-      color: white;
-      text-align: center;
+    :root {
+      --bg: #090910;
+      --panel: #13131f;
+      --purple: #9b5cff;
+      --pink: #d45cff;
+      --text: #f6f3ff;
+      --muted: #a5a1b8;
+      --border: #29283b;
     }
 
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
     header {
-      padding: 60px 20px;
-      background: linear-gradient(135deg, #673de6, #171a45);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 7%;
+      border-bottom: 1px solid var(--border);
+      background: #0d0c16;
+    }
+
+    .logo {
+      font-size: 27px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .logo span { color: var(--purple); }
+
+    nav { display: flex; gap: 22px; flex-wrap: wrap; }
+    nav a { color: var(--muted); font-size: 14px; }
+    nav a:hover { color: white; }
+
+    .hero {
+      text-align: center;
+      padding: 85px 20px 65px;
+      background: radial-gradient(ellipse at top, #30204d 0%, #11101b 48%, var(--bg) 78%);
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid #59378b;
+      color: #d6b8ff;
+      background: #241738;
+      border-radius: 30px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
     h1 {
-      font-size: 42px;
+      font-size: clamp(38px, 7vw, 70px);
+      line-height: 1.05;
+      margin: 24px auto 18px;
+      max-width: 850px;
+      letter-spacing: -2px;
     }
 
-    main {
-      padding: 40px 20px;
+    h1 span {
+      background: linear-gradient(90deg, #a66aff, #e18bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    button {
-      padding: 14px 24px;
-      border: none;
+    .hero p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 590px;
+      margin: 0 auto 28px;
+    }
+
+    .hero-button {
+      display: inline-block;
+      padding: 14px 23px;
       border-radius: 10px;
-      background: #8057ff;
-      color: white;
-      font-size: 16px;
+      background: linear-gradient(100deg, #8547ed, #b14eea);
+      font-weight: bold;
+      box-shadow: 0 6px 30px #8b43e933;
+    }
+
+    main { max-width: 1200px; margin: auto; padding: 45px 22px 70px; }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    h2 { margin: 0 0 8px; font-size: 29px; }
+    .subtitle { color: var(--muted); margin: 0; font-size: 14px; }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      color: var(--text);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    input { flex: 1; min-width: 180px; }
+    input:focus, select:focus { border-color: var(--purple); }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-bottom: 27px;
+    }
+
+    .filter {
+      padding: 10px 15px;
+      color: var(--muted);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 9px;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #a18aff;
+    .filter.active, .filter:hover {
+      color: white;
+      border-color: var(--purple);
+      background: #291943;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      overflow: hidden;
+      background: linear-gradient(145deg, #171624, #101019);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      transition: transform .2s, border-color .2s;
+    }
+
+    .card:hover { transform: translateY(-4px); border-color: #7650a8; }
+
+    .product-art {
+      height: 165px;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at center, #35234e, #191725 68%);
+      font-size: 65px;
+    }
+
+    .card-body { padding: 18px; }
+
+    .category {
+      color: #c8a4ff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    .card h3 { font-size: 18px; margin: 10px 0; }
+    .description { color: var(--muted); font-size: 13px; line-height: 1.6; min-height: 40px; }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 17px 0;
+    }
+
+    .price { font-size: 22px; font-weight: bold; }
+    .demo-label { font-size: 10px; color: var(--muted); }
+
+    .product-link {
+      display: block;
+      text-align: center;
+      background: #8d4fe9;
+      padding: 12px;
+      border-radius: 9px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .product-link:hover { background: #a86aff; }
+    #empty { display: none; color: var(--muted); padding: 35px 0; }
+
+    .info {
+      margin-top: 55px;
+      padding: 25px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      line-height: 1.7;
+    }
+
+    .info h2 { font-size: 21px; }
+    .info p { color: var(--muted); font-size: 14px; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      padding: 25px 15px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 18px 5%; align-items: flex-start; flex-direction: column; }
+      .hero { padding-top: 60px; }
+      main { padding-left: 15px; padding-right: 15px; }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>Bienvenue sur mon site !</h1>
-    <p>Je suis en train d'apprendre à coder.</p>
+    <a class="logo" href="#">Key<span>Pick</span> 🎮</a>
+    <nav>
+      <a href="#produits">Produits</a>
+      <a href="#apropos">À propos</a>
+    </nav>
   </header>
 
-  <main>
-    <h2>Mon premier projet 🚀</h2>
-    <p>Ce site a été créé par moi, avec du code !</p>
-    <button onclick="alert('Bien joué ! Ton site fonctionne !')">
-      Clique ici
-    </button>
+  <section class="hero">
+    <span class="tag">LEVEL UP TON SETUP</span>
+    <h1>Le bon matos.<br><span>Le bon choix.</span></h1>
+    <p>Claviers, souris, casques et écrans : découvre du matériel gaming pour trouver le setup qui te correspond.</p>
+    <a class="hero-button" href="#produits">Explorer les produits ↗</a>
+  </section>
+
+  <main id="produits">
+    <div class="section-heading">
+      <div>
+        <h2>Le coin gaming ⚡</h2>
+        <p class="subtitle">Trouve ton prochain équipement.</p>
+      </div>
+    </div>
+
+    <div class="tools">
+      <input id="search" type="search" placeholder="🔎 Rechercher un produit..." aria-label="Rechercher un produit">
+      <select id="sort" aria-label="Trier les produits">
+        <option value="default">Tri par défaut</option>
+        <option value="low">Prix : croissant</option>
+        <option value="high">Prix : décroissant</option>
+        <option value="name">Nom : A à Z</option>
+      </select>
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter active" data-category="Tous">Tout voir</button>
+      <button class="filter" data-category="Claviers">⌨️ Claviers</button>
+      <button class="filter" data-category="Souris">🖱️ Souris</button>
+      <button class="filter" data-category="Casques">🎧 Casques</button>
+      <button class="filter" data-category="Écrans">🖥️ Écrans</button>
+      <button class="filter" data-category="Tapis">🎯 Tapis</button>
+      <button class="filter" data-category="Consoles">🎮 Consoles</button>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <p id="empty">Aucun produit trouvé. Essaie une autre recherche !</p>
+
+    <section class="info" id="apropos">
+      <h2>Pourquoi KeyPick ? 💜</h2>
+      <p>Notre objectif : t'aider à découvrir du matériel gaming et à comparer les options avant de faire ton choix. Les produits, prix et liens affichés ici sont des exemples de démonstration ; ils ne constituent pas des offres vérifiées.</p>
+      <p>Certains liens pourront devenir des liens affiliés. Si c'est le cas, KeyPick pourra recevoir une commission sur certains achats, sans coût supplémentaire pour l'acheteur. Les liens affiliés seront clairement signalés.</p>
+    </section>
   </main>
+
+  <footer>
+    © 2026 KeyPick — Fait pour les passionnés de gaming 💜
+  </footer>
+
+  <script>
+    const products = [
+      { name: "Clavier mécanique RGB", category: "Claviers", emoji: "⌨️", price: 79, desc: "Un clavier mécanique pour ton setup gaming." },
+      { name: "Clavier compact 60 %", category: "Claviers", emoji: "⌨️", price: 59, desc: "Un format compact pour libérer de la place." },
+      { name: "Souris gaming légère", category: "Souris", emoji: "🖱️", price: 49, desc: "Une souris pensée pour les longues sessions." },
+      { name: "Souris sans fil", category: "Souris", emoji: "🖱️", price: 69, desc: "Une configuration sans câble sur le bureau." },
+      { name: "Casque gaming", category: "Casques", emoji: "🎧", price: 64, desc: "Un casque pour jouer et discuter avec tes amis." },
+      { name: "Casque sans fil", category: "Casques", emoji: "🎧", price: 99, desc: "Plus de liberté pour tes sessions gaming." },
+      { name: "Écran gaming 144 Hz", category: "Écrans", emoji: "🖥️", price: 179, desc: "Un écran à taux de rafraîchissement élevé." },
+      { name: "Écran gaming 240 Hz", category: "Écrans", emoji: "🖥️", price: 299, desc: "Une option rapide pour les jeux compétitifs." },
+      { name: "Tapis de souris XL", category: "Tapis", emoji: "🎯", price: 19, desc: "Un grand tapis pour souris et clavier." },
+      { name: "Tapis de souris RGB", category: "Tapis", emoji: "✨", price: 29, desc: "Ajoute une touche lumineuse à ton bureau." },
+      { name: "Console de salon", category: "Consoles", emoji: "🎮", price: 499, desc: "Une console pour jouer sur grand écran." },
+      { name: "Console portable", category: "Consoles", emoji: "🕹️", price: 349, desc: "Joue à tes jeux compatibles en déplacement." }
+    ];
+
+    let activeCategory = "Tous";
+    const grid = document.getElementById("grid");
+    const search = document.getElementById("search");
+    const sort = document.getElementById("sort");
+    const empty = document.getElementById("empty");
+
+    function render() {
+      const term = search.value.trim().toLowerCase();
+      let shown = products.filter(product => {
+        const matchesCategory = activeCategory === "Tous" || product.category === activeCategory;
+        const matchesSearch = (product.name + " " + product.category + " " + product.desc).toLowerCase().includes(term);
+        return matchesCategory && matchesSearch;
+      });
+
+      if (sort.value === "low") shown.sort((a, b) => a.price - b.price);
+      if (sort.value === "high") shown.sort((a, b) => b.price - a.price);
+      if (sort.value === "name") shown.sort((a, b) => a.name.localeCompare(b.name, "fr"));
+
+      grid.innerHTML = shown.map(product => `
+        <article class="card">
+          <div class="product-art" aria-hidden="true">${product.emoji}</div>
+          <div class="card-body">
+            <span class="category">${product.category}</span>
+            <h3>${product.name}</h3>
+            <p class="description">${product.desc}</p>
+            <div class="price-row">
+              <span class="price">~${product.price} €</span>
+              <span class="demo-label">PRIX EXEMPLE</span>
+            </div>
+            <a class="product-link"
+               href="https://www.google.com/search?q=${encodeURIComponent(product.name)}"
+               target="_blank" rel="noopener noreferrer">
+              Rechercher ce produit ↗
+            </a>
+          </div>
+        </article>
+      `).join("");
+
+      empty.style.display = shown.length ? "none" : "block";
+    }
+
+    document.getElementById("filters").addEventListener("click", event => {
+      const button = event.target.closest("button[data-category]");
+      if (!button) return;
+      activeCategory = button.dataset.category;
+      document.querySelectorAll(".filter").forEach(item => {
+        item.classList.toggle("active", item === button);
+      });
+      render();
+    });
+
+    search.addEventListener("input", render);
+    sort.addEventListener("change", render);
+    render();
+  </script>
 </body>
 </html>
-
