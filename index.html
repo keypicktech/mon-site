@@ -1,1249 +1,623 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b0912">
-  <meta name="description" content="KeyPick t'aide à découvrir et comparer le matériel gaming pour ton setup.">
-  <title>KeyPick — Trouve ton setup</title>
-
-  <style>
-    :root {
-      --bg: #0b0912;
-      --panel: #15111f;
-      --panel-light: #1d172a;
-      --purple: #a855f7;
-      --purple-light: #c084fc;
-      --text: #f7f3ff;
-      --muted: #b6abc7;
-      --border: #30243f;
-      --green: #86efac;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
-    }
-
-    body.menu-open {
-      overflow: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input,
-    select {
-      font: inherit;
-    }
-
-    button,
-    select {
-      cursor: pointer;
-    }
-
-    button:focus-visible,
-    a:focus-visible,
-    input:focus-visible,
-    select:focus-visible {
-      outline: 2px solid var(--purple-light);
-      outline-offset: 3px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 5%;
-      background: rgba(11, 9, 18, 0.94);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(12px);
-    }
-
-    .brand {
-      font-size: 1.7rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .brand span {
-      color: var(--purple-light);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .menu-button {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 13px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--panel);
-      color: var(--text);
-    }
-
-    .hamburger {
-      display: grid;
-      gap: 5px;
-    }
-
-    .hamburger span {
-      display: block;
-      width: 21px;
-      height: 2px;
-      border-radius: 5px;
-      background: var(--text);
-    }
-
-    .header-link {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 90px 6% 80px;
-      text-align: center;
-      background:
-        radial-gradient(ellipse at 50% 10%, #512080 0%, transparent 48%),
-        linear-gradient(180deg, #171021, var(--bg));
-    }
-
-    .hero::before {
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(#ffffff15 1px, transparent 1px);
-      background-size: 28px 28px;
-      content: "";
-      pointer-events: none;
-    }
-
-    .hero-content {
-      position: relative;
-      max-width: 850px;
-      margin: auto;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      padding: 6px 12px;
-      border: 1px solid #7742a8;
-      border-radius: 999px;
-      color: var(--purple-light);
-      background: #241532;
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    .hero h1 {
-      margin: 22px 0 14px;
-      font-size: clamp(2.5rem, 8vw, 5.2rem);
-      line-height: 1.05;
-      letter-spacing: -3px;
-    }
-
-    .hero h1 span {
-      color: var(--purple-light);
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: 0 auto;
-      color: var(--muted);
-      font-size: 1.08rem;
-    }
-
-    .hero-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 30px;
-    }
-
-    .button-primary,
-    .button-secondary {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px 19px;
-      border: 1px solid transparent;
-      border-radius: 12px;
-      font-weight: bold;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    .button-primary {
-      background: var(--purple);
-      color: white;
-    }
-
-    .button-primary:hover {
-      background: #9333ea;
-      transform: translateY(-2px);
-    }
-
-    .button-secondary {
-      border-color: var(--border);
-      background: var(--panel);
-    }
-
-    .button-secondary:hover {
-      background: var(--panel-light);
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      max-width: 1050px;
-      margin: 0 auto;
-      padding: 30px 5%;
-    }
-
-    .feature {
-      padding: 22px 18px;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      background: var(--panel);
-    }
-
-    .feature-icon {
-      font-size: 1.8rem;
-    }
-
-    .feature h3 {
-      margin: 8px 0 4px;
-      font-size: 1.05rem;
-    }
-
-    .feature p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .products-section {
-      max-width: 1250px;
-      margin: auto;
-      padding: 50px 5% 90px;
-      scroll-margin-top: 85px;
-    }
-
-    .section-heading {
-      margin-bottom: 25px;
-    }
-
-    .section-heading h2 {
-      margin: 0 0 5px;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-    }
-
-    .section-heading p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 210px;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .search-input,
-    .sort-select {
-      width: 100%;
-      min-height: 48px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--panel);
-      color: var(--text);
-    }
-
-    .search-input::placeholder {
-      color: #9b8da9;
-    }
-
-    .category-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 22px;
-    }
-
-    .category-pill {
-      padding: 8px 13px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: var(--panel);
-      color: var(--muted);
-    }
-
-    .category-pill:hover,
-    .category-pill.active {
-      border-color: var(--purple);
-      background: #301747;
-      color: white;
-    }
-
-    .results-line {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin: 12px 0 16px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .product-card {
-      display: flex;
-      min-width: 0;
-      flex-direction: column;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      background: var(--panel);
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .product-card:hover {
-      transform: translateY(-4px);
-      border-color: #70459b;
-    }
-
-    .product-art {
-      display: grid;
-      min-height: 160px;
-      place-items: center;
-      background:
-        radial-gradient(ellipse at center, #54257c 0%, #241431 48%, #17111f 100%);
-      font-size: 4.4rem;
-    }
-
-    .product-body {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      padding: 18px;
-    }
-
-    .product-category {
-      color: var(--purple-light);
-      font-size: 0.76rem;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .product-card h3 {
-      margin: 7px 0;
-      font-size: 1.15rem;
-      line-height: 1.35;
-    }
-
-    .product-description {
-      flex: 1;
-      margin: 0 0 15px;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .price-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin: 5px 0 15px;
-    }
-
-    .price {
-      font-size: 1.5rem;
-      font-weight: 900;
-    }
-
-    .price-note {
-      color: #fcd34d;
-      font-size: 0.7rem;
-      font-weight: bold;
-    }
-
-    .store-links {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .store-link {
-      padding: 9px 7px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: #21182d;
-      text-align: center;
-      font-size: 0.82rem;
-      font-weight: bold;
-    }
-
-    .store-link:hover {
-      border-color: var(--purple);
-      background: #352046;
-    }
-
-    .store-link.official {
-      grid-column: 1 / -1;
-      border-color: #68428b;
-    }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      padding: 35px 15px;
-      border: 1px dashed var(--border);
-      border-radius: 16px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .about-section {
-      padding: 65px 6%;
-      border-top: 1px solid var(--border);
-      background: #100d18;
-      text-align: center;
-    }
-
-    .about-inner {
-      max-width: 760px;
-      margin: auto;
-    }
-
-    .about-section h2 {
-      font-size: 2rem;
-    }
-
-    .about-section p {
-      color: var(--muted);
-    }
-
-    footer {
-      padding: 25px 5%;
-      border-top: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.85rem;
-      text-align: center;
-    }
-
-    .drawer-overlay {
-      position: fixed;
-      z-index: 40;
-      inset: 0;
-      background: #000a;
-    }
-
-    .drawer {
-      position: fixed;
-      z-index: 41;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      display: flex;
-      width: min(340px, 88vw);
-      flex-direction: column;
-      overflow-y: auto;
-      padding: 22px;
-      border-right: 1px solid var(--border);
-      background: #110d19;
-      transform: translateX(-105%);
-      transition: transform 0.25s ease;
-    }
-
-    .drawer.open {
-      transform: translateX(0);
-    }
-
-    .drawer-heading {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .drawer-heading h2 {
-      margin: 0;
-    }
-
-    .close-button {
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--panel);
-      color: white;
-      font-size: 1.4rem;
-    }
-
-    .drawer-label {
-      margin: 20px 0 8px;
-      color: var(--purple-light);
-      font-size: 0.75rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .drawer-category {
-      width: 100%;
-      padding: 11px 12px;
-      border: 0;
-      border-radius: 9px;
-      background: transparent;
-      color: var(--text);
-      text-align: left;
-    }
-
-    .drawer-category:hover,
-    .drawer-category.active {
-      background: #2c1b3d;
-      color: var(--purple-light);
-    }
-
-    .filter-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 0;
-      color: var(--muted);
-    }
-
-    .filter-label input {
-      accent-color: var(--purple);
-    }
-
-    .drawer-actions {
-      display: grid;
-      gap: 10px;
-      margin-top: 25px;
-    }
-
-    .ai-button {
-      position: fixed;
-      z-index: 25;
-      right: 20px;
-      bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 13px 17px;
-      border: 1px solid #d8b4fe;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #9333ea, #6b21a8);
-      box-shadow: 0 8px 35px #9333ea55;
-      color: white;
-      font-weight: bold;
-    }
-
-    .ai-button:hover {
-      background: linear-gradient(135deg, #a855f7, #7e22ce);
-    }
-
-    .toast {
-      position: fixed;
-      z-index: 60;
-      right: 20px;
-      bottom: 85px;
-      max-width: min(360px, calc(100vw - 40px));
-      padding: 15px 18px;
-      border: 1px solid #70459b;
-      border-radius: 13px;
-      background: #21162e;
-      box-shadow: 0 10px 35px #0008;
-    }
-
-    .toast strong {
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .toast p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    [hidden] {
-      display: none !important;
-    }
-
-    @media (max-width: 850px) {
-      .product-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .features {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .topbar {
-        padding: 12px 4%;
-      }
-
-      .brand {
-        font-size: 1.45rem;
-      }
-
-      .header-link {
-        display: none;
-      }
-
-      .menu-button {
-        padding: 9px 10px;
-      }
-
-      .hero {
-        padding: 65px 5% 55px;
-      }
-
-      .hero h1 {
-        letter-spacing: -1.5px;
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-
-      .product-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .product-art {
-        min-height: 145px;
-      }
-
-      .products-section {
-        padding-right: 4%;
-        padding-left: 4%;
-      }
-
-      .ai-button {
-        right: 12px;
-        bottom: 12px;
-        padding: 11px 14px;
-      }
-
-      .toast {
-        right: 12px;
-        bottom: 75px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09090d">
+<meta name="description" content="KeyPick : compare les périphériques gaming et trouve ton prochain équipement.">
+<title>KeyPick — Level Up Ton Setup</title>
+
+<style>
+:root {
+  --bg:#09090d; --panel:#12121a; --purple:#a855f7;
+  --purple2:#7c3aed; --text:#f5f3ff; --muted:#aaa5bb;
+  --border:#292536; --green:#70f0b0;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+body.locked{overflow:hidden}
+button,input,select{font:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:12px;padding:13px 5%;
+  background:rgba(9,9,13,.96);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px)
+}
+.brand{justify-self:center;font-size:1.85rem;font-weight:900;letter-spacing:-1.5px}
+.brand span,.footer-brand span{color:var(--purple)}
+.menu-button,.header-ai-button{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:42px;padding:9px 13px;color:var(--text);
+  border:1px solid var(--border);border-radius:12px;
+  background:var(--panel);font-weight:700;white-space:nowrap;transition:.2s
+}
+.menu-button{justify-self:start}
+.header-ai-button{justify-self:end;border-color:#7742a8;background:#291638;color:#ead7ff}
+.menu-button:hover,.header-ai-button:hover{border-color:var(--purple);background:#251831}
+.hamburger{display:flex;flex-direction:column;gap:4px;width:18px}
+.hamburger span{display:block;height:2px;width:18px;border-radius:5px;background:white}
+
+.hero{
+  padding:88px 20px 76px;text-align:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(124,58,237,.24),transparent 62%),linear-gradient(180deg,#0e0b16,var(--bg))
+}
+.eyebrow{display:inline-block;padding:5px 12px;color:#d9baff;border:1px solid #56317a;background:#1b1028;border-radius:99px;font-size:.8rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase}
+h1{margin:22px auto 14px;max-width:850px;font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.03;letter-spacing:-3px}
+h1 span{color:var(--purple);text-shadow:0 0 38px rgba(168,85,247,.2)}
+.hero p{max-width:620px;margin:0 auto 27px;color:var(--muted);font-size:1.08rem}
+.primary-link{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border:0;border-radius:12px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:white;font-weight:800;box-shadow:0 8px 30px rgba(124,58,237,.2);transition:transform .2s}
+.primary-link:hover{transform:translateY(-2px)}
+
+.section{width:min(1160px,90%);margin:0 auto;padding:48px 0}
+.section-heading{margin-bottom:24px}
+.section-heading h2{margin:0 0 5px;font-size:clamp(1.6rem,4vw,2.15rem);letter-spacing:-.7px}
+.section-heading p{margin:0;color:var(--muted)}
+.intro-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.info-card{padding:22px;background:var(--panel);border:1px solid var(--border);border-radius:17px}
+.info-icon{display:grid;place-items:center;width:43px;height:43px;margin-bottom:12px;background:#28153b;border-radius:12px;font-size:1.35rem}
+.info-card h3{margin:0 0 5px}
+.info-card p{margin:0;color:var(--muted);font-size:.94rem}
+
+.catalog{padding-top:25px}
+.controls{display:grid;grid-template-columns:minmax(180px,1fr) 190px;gap:12px;margin-bottom:17px}
+.search-wrap{position:relative}
+.search-wrap span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search-input,.sort-select{width:100%;min-height:48px;padding:12px 14px;color:var(--text);background:var(--panel);border:1px solid var(--border);border-radius:12px;outline:none}
+.search-input{padding-left:42px}
+.search-input:focus,.sort-select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(168,85,247,.12)}
+.sort-select option{background:var(--panel);color:var(--text)}
+.filters{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:25px}
+.filter-button{padding:8px 14px;border:1px solid var(--border);border-radius:99px;color:var(--muted);background:var(--panel);font-size:.9rem;transition:.2s}
+.filter-button:hover,.filter-button.active{color:white;border-color:var(--purple);background:#321a49}
+.catalog-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:15px;color:var(--muted);font-size:.9rem}
+.product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.product-card{display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid var(--border);border-radius:17px;background:linear-gradient(160deg,#171520,#101016);transition:transform .2s,border-color .2s}
+.product-card:hover{transform:translateY(-4px);border-color:#70449a}
+.product-visual{display:grid;place-items:center;min-height:165px;padding:20px;background:radial-gradient(ellipse at center,rgba(124,58,237,.19),transparent 68%),#101017;border-bottom:1px solid var(--border)}
+.product-emoji{font-size:4.3rem;filter:drop-shadow(0 10px 18px rgba(168,85,247,.18))}
+.product-body{display:flex;flex-direction:column;flex:1;padding:17px}
+.product-topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.category-label{color:#d9baff;background:#291638;border-radius:6px;padding:4px 8px;font-size:.75rem;font-weight:700}
+.rating{color:#ffce70;font-size:.83rem;white-space:nowrap}
+.product-card h3{margin:0 0 7px;font-size:1.1rem;line-height:1.4}
+.product-description{margin:0 0 17px;color:var(--muted);font-size:.9rem}
+.product-bottom{margin-top:auto}
+.price-line{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+.price{color:var(--green);font-size:1.3rem;font-weight:900}
+.demo-label{color:var(--muted);font-size:.7rem;text-align:right}
+.product-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.store-link,.details-button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px;border-radius:9px;font-size:.84rem;font-weight:700;text-align:center}
+.store-link{background:var(--purple2);color:white}
+.details-button{border:1px solid var(--border);color:var(--text);background:#1a1923}
+.store-link:hover{background:#9250ed}
+.details-button:hover{border-color:var(--purple)}
+.empty-state{grid-column:1/-1;padding:45px 20px;color:var(--muted);text-align:center;border:1px dashed var(--border);border-radius:15px}
+
+.about-panel{padding:28px;border:1px solid #39254c;border-radius:18px;background:radial-gradient(ellipse at top right,#241432,#12121a 65%)}
+.about-panel p{max-width:780px;color:var(--muted)}
+footer{margin-top:25px;padding:30px 5%;border-top:1px solid var(--border);color:var(--muted);font-size:.88rem}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;max-width:1160px;margin:auto}
+.footer-brand{color:var(--text);font-size:1.25rem;font-weight:900}
+.footer-links{display:flex;gap:16px;flex-wrap:wrap}
+.footer-links a:hover{color:white}
+
+/* Menu latéral */
+.overlay{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.67);opacity:0;visibility:hidden;transition:.22s}
+.overlay.open{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:50;width:min(360px,88vw);padding:24px;overflow-y:auto;background:#101018;border-right:1px solid var(--border);transform:translateX(-105%);transition:transform .25s}
+.drawer.open{transform:translateX(0)}
+.drawer-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.drawer-title{font-size:1.45rem;font-weight:900}
+.drawer-title span{color:var(--purple)}
+.close-button{width:38px;height:38px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:white;font-size:1.4rem}
+.drawer h3{margin:23px 0 10px;font-size:1rem}
+.drawer-link{display:block;width:100%;padding:11px 12px;margin:5px 0;border:1px solid transparent;border-radius:9px;background:transparent;color:var(--muted);text-align:left}
+.drawer-link:hover,.drawer-link.active{color:white;background:#251831;border-color:#553274}
+.drawer-note{margin-top:25px;padding:14px;background:var(--panel);border-radius:12px;color:var(--muted);font-size:.85rem}
+
+.toast{position:fixed;bottom:20px;left:50%;z-index:70;max-width:calc(100% - 32px);padding:13px 18px;border:1px solid #65418a;border-radius:12px;background:#21152e;color:#f5eaff;box-shadow:0 12px 35px #0008;opacity:0;pointer-events:none;transform:translate(-50%,15px);transition:.22s;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:#000b}
+.modal.open{display:flex}
+.modal-card{width:min(500px,100%);padding:24px;border:1px solid var(--border);border-radius:18px;background:var(--panel)}
+.modal-card h2{margin-top:0}
+.modal-card p{color:var(--muted)}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+[hidden]{display:none!important}
+
+@media(max-width:800px){
+  .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .intro-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .topbar{padding:11px 3%;gap:6px}
+  .brand{font-size:1.4rem;letter-spacing:-1px}
+  .menu-button,.header-ai-button{min-height:39px;padding:8px;font-size:.78rem;gap:5px}
+  .hamburger,.hamburger span{width:15px}
+  .hamburger span{width:15px}
+  .hero{padding:66px 18px 58px}
+  h1{letter-spacing:-1.8px}
+  .section{width:92%;padding:35px 0}
+  .controls{grid-template-columns:1fr}
+  .product-grid{grid-template-columns:1fr}
+  .product-visual{min-height:140px}
+  .catalog-meta{font-size:.8rem}
+}
+</style>
 </head>
 
 <body>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="KeyPick, accueil">Key<span>Pick</span></a>
-
-    <div class="header-actions">
-      <a class="header-link" href="#about">À propos</a>
-
-      <button
-        class="menu-button"
-        id="openMenu"
-        type="button"
-        aria-label="Ouvrir le menu"
-        aria-controls="drawer"
-        aria-expanded="false"
-      >
-        <span class="hamburger" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-        <span>Menu</span>
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-content">
-        <span class="eyebrow">TON SETUP, TES CHOIX</span>
-
-        <h1>LEVEL UP TON <span>SETUP</span></h1>
-
-        <p>
-          Bienvenue sur KeyPick ! Découvre du matériel gaming,
-          explore les catégories et compare les produits pour trouver
-          ceux qui correspondent à tes besoins.
-        </p>
-
-        <div class="hero-buttons">
-          <a class="button-primary" href="#products">Découvrir les produits ↓</a>
-          <button class="button-secondary" id="heroMenu" type="button">
-            Explorer les catégories
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="features" aria-label="Les avantages de KeyPick">
-      <article class="feature">
-        <div class="feature-icon" aria-hidden="true">🔎</div>
-        <h3>Recherche facile</h3>
-        <p>Retrouve rapidement un produit grâce à la recherche et aux filtres.</p>
-      </article>
-
-      <article class="feature">
-        <div class="feature-icon" aria-hidden="true">🎮</div>
-        <h3>Tout pour ton setup</h3>
-        <p>Claviers, souris, écrans, casques et matériel informatique.</p>
-      </article>
-
-      <article class="feature">
-        <div class="feature-icon" aria-hidden="true">🛍️</div>
-        <h3>Explore les boutiques</h3>
-        <p>Retrouve les recherches de produits sur plusieurs sites marchands.</p>
-      </article>
-    </section>
-
-    <section class="products-section" id="products">
-      <div class="section-heading">
-        <span class="eyebrow">LE CATALOGUE</span>
-        <h2>Explore le matériel</h2>
-        <p>Recherche un produit, choisis une catégorie et trie les résultats.</p>
-      </div>
-
-      <div class="toolbar">
-        <input
-          class="search-input"
-          id="searchInput"
-          type="search"
-          placeholder="🔎 Rechercher un clavier, une souris..."
-          aria-label="Rechercher un produit"
-        >
-
-        <select class="sort-select" id="sortSelect" aria-label="Trier les produits">
-          <option value="default">Tri : recommandé</option>
-          <option value="low">Prix : du moins cher au plus cher</option>
-          <option value="high">Prix : du plus cher au moins cher</option>
-          <option value="name">Nom : A à Z</option>
-        </select>
-      </div>
-
-      <div class="category-pills" id="categoryPills" aria-label="Filtrer par catégorie"></div>
-
-      <div class="results-line">
-        <span id="resultCount" aria-live="polite">Chargement des produits…</span>
-        <span>Prix de démonstration</span>
-      </div>
-
-      <div class="product-grid" id="productGrid"></div>
-    </section>
-
-    <section class="about-section" id="about">
-      <div class="about-inner">
-        <span class="eyebrow">À PROPOS DE KEYPICK</span>
-        <h2>Le bon matériel pour tes envies</h2>
-        <p>
-          KeyPick est un projet consacré au matériel informatique et gaming.
-          L'objectif est de rendre la recherche de produits plus simple,
-          de présenter les caractéristiques utiles et, à terme, de comparer
-          les offres des boutiques.
-        </p>
-        <p>
-          Les prix présentés dans cette première version sont des exemples.
-          Vérifie toujours le prix et la disponibilité sur le site marchand
-          avant d'acheter.
-        </p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© <span id="year"></span> KeyPick — Trouve ton prochain équipement.</p>
-    <p>Les prix de cette version sont indicatifs et ne sont pas mis à jour en direct.</p>
-  </footer>
-
-  <div class="drawer-overlay" id="drawerOverlay" hidden></div>
-
-  <aside
-    class="drawer"
-    id="drawer"
-    aria-label="Menu et filtres"
-    aria-hidden="true"
-  >
-    <div class="drawer-heading">
-      <h2>Menu KeyPick</h2>
-      <button class="close-button" id="closeMenu" type="button" aria-label="Fermer le menu">
-        ×
-      </button>
-    </div>
-
-    <p class="drawer-label">Catégories</p>
-    <div id="drawerCategories"></div>
-
-    <p class="drawer-label">Boutiques à explorer</p>
-
-    <label class="filter-label">
-      <input type="checkbox" class="store-filter" value="Amazon">
-      Amazon
-    </label>
-
-    <label class="filter-label">
-      <input type="checkbox" class="store-filter" value="Fnac">
-      Fnac
-    </label>
-
-    <label class="filter-label">
-      <input type="checkbox" class="store-filter" value="Boulanger">
-      Boulanger
-    </label>
-
-    <label class="filter-label">
-      <input type="checkbox" class="store-filter" value="Logitech">
-      Boutique officielle Logitech
-    </label>
-
-    <div class="drawer-actions">
-      <button class="button-primary" id="applyFilters" type="button">
-        Appliquer les filtres
-      </button>
-      <button class="button-secondary" id="resetFilters" type="button">
-        Réinitialiser les filtres
-      </button>
-    </div>
-  </aside>
-
-  <button class="ai-button" id="aiButton" type="button">
-    <span aria-hidden="true">✦</span>
-    IA Assistance
+<header class="topbar">
+  <button class="menu-button" id="openMenu" type="button" aria-label="Ouvrir le menu" aria-controls="drawer" aria-expanded="false">
+    <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+    <span>Menu</span>
   </button>
 
-  <div class="toast" id="toast" role="status" hidden>
-    <strong id="toastTitle">IA Assistance</strong>
-    <p id="toastMessage">Cette fonctionnalité arrive bientôt sur KeyPick !</p>
+  <a class="brand" href="#" aria-label="KeyPick, accueil">Key<span>Pick</span></a>
+
+  <button class="header-ai-button" id="aiButton" type="button">
+    <span aria-hidden="true">✦</span> IA Assistance
+  </button>
+</header>
+
+<main>
+  <section class="hero" id="accueil">
+    <span class="eyebrow">Le gaming, en mieux</span>
+    <h1>LEVEL UP TON <span>SETUP</span></h1>
+    <p>Claviers, souris, casques et équipements gaming : découvre ton prochain périphérique et compare les options pour trouver celui qui te correspond.</p>
+    <a class="primary-link" href="#catalogue">Découvrir les produits <span aria-hidden="true">→</span></a>
+  </section>
+
+  <section class="section" id="presentation">
+    <div class="section-heading">
+      <h2>Bienvenue sur KeyPick</h2>
+      <p>Tout ce qu'il faut pour construire ton setup gaming.</p>
+    </div>
+    <div class="intro-grid">
+      <article class="info-card">
+        <div class="info-icon" aria-hidden="true">⌨️</div>
+        <h3>Du matériel pour jouer</h3>
+        <p>Explore une sélection de claviers, souris, casques et autres accessoires gaming.</p>
+      </article>
+      <article class="info-card">
+        <div class="info-icon" aria-hidden="true">⚖️</div>
+        <h3>Compare facilement</h3>
+        <p>Retrouve les caractéristiques essentielles et les liens utiles au même endroit.</p>
+      </article>
+      <article class="info-card">
+        <div class="info-icon" aria-hidden="true">🎯</div>
+        <h3>Trouve ton équipement</h3>
+        <p>Utilise la recherche et les filtres pour repérer les produits qui t'intéressent.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section catalog" id="catalogue">
+    <div class="section-heading">
+      <h2>Explore le catalogue</h2>
+      <p>Choisis ta catégorie et trouve ton prochain équipement.</p>
+    </div>
+
+    <div class="controls">
+      <label class="search-wrap">
+        <span aria-hidden="true">⌕</span>
+        <input class="search-input" id="searchInput" type="search" placeholder="Rechercher un produit..." aria-label="Rechercher un produit">
+      </label>
+      <select class="sort-select" id="sortSelect" aria-label="Trier les produits">
+        <option value="featured">Trier : sélection</option>
+        <option value="price-asc">Prix croissant</option>
+        <option value="price-desc">Prix décroissant</option>
+        <option value="name">Nom A à Z</option>
+      </select>
+    </div>
+
+    <div class="filters" id="filters" aria-label="Catégories">
+      <button class="filter-button active" data-category="Tous" type="button">Tout voir</button>
+      <button class="filter-button" data-category="Claviers" type="button">⌨️ Claviers</button>
+      <button class="filter-button" data-category="Souris" type="button">🖱️ Souris</button>
+      <button class="filter-button" data-category="Casques" type="button">🎧 Casques</button>
+      <button class="filter-button" data-category="Écrans" type="button">🖥️ Écrans</button>
+      <button class="filter-button" data-category="Accessoires" type="button">🎮 Accessoires</button>
+    </div>
+
+    <div class="catalog-meta">
+      <span id="resultCount">Produits disponibles</span>
+      <span>Prix indicatifs de démonstration</span>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <section class="section" id="apropos">
+    <div class="about-panel">
+      <span class="eyebrow">À propos</span>
+      <h2>Ton setup, tes choix.</h2>
+      <p>KeyPick est un projet dédié aux joueurs qui veulent découvrir du matériel gaming et comparer les équipements plus facilement. Le but : rendre la recherche plus simple, avec une interface claire et des produits regroupés au même endroit.</p>
+      <p>Les prix présentés pour le moment sont des exemples de démonstration et ne sont pas des prix en temps réel. Vérifie toujours le tarif final et la disponibilité sur le site du vendeur.</p>
+      <a class="primary-link" href="#catalogue">Explorer les produits →</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a class="footer-brand" href="#accueil">Key<span>Pick</span></a>
+    <span>© <span id="year"></span> KeyPick · Projet en développement</span>
+    <nav class="footer-links" aria-label="Liens de pied de page">
+      <a href="#accueil">Accueil</a>
+      <a href="#catalogue">Catalogue</a>
+      <a href="#apropos">À propos</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Menu principal" aria-hidden="true">
+  <div class="drawer-header">
+    <div class="drawer-title">Key<span>Pick</span></div>
+    <button class="close-button" id="closeMenu" type="button" aria-label="Fermer le menu">×</button>
   </div>
 
-  <script>
-    "use strict";
+  <h3>Navigation</h3>
+  <button class="drawer-link" data-target="accueil" type="button">⌂ Accueil</button>
+  <button class="drawer-link" data-target="presentation" type="button">✦ Présentation</button>
+  <button class="drawer-link" data-target="catalogue" type="button">▦ Tous les produits</button>
+  <button class="drawer-link" data-target="apropos" type="button">ⓘ À propos de KeyPick</button>
 
-    // Prix de démonstration uniquement : ils ne sont pas vérifiés en direct.
-    const products = [
-      {
-        name: "Logitech G413 SE",
-        category: "Claviers",
-        emoji: "⌨️",
-        price: 59.99,
-        desc: "Clavier mécanique gaming avec touches PBT et éclairage blanc. Vérifie la variante et le prix sur la boutique.",
-        stores: ["Amazon", "Fnac", "Boulanger", "Logitech"]
-      },
-      {
-        name: "Clavier mécanique RGB",
-        category: "Claviers",
-        emoji: "⌨️",
-        price: 79,
-        desc: "Clavier mécanique pour personnaliser ton espace gaming.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Clavier compact 60 %",
-        category: "Claviers",
-        emoji: "⌨️",
-        price: 59,
-        desc: "Un format compact pour libérer de la place sur ton bureau.",
-        stores: ["Amazon", "Fnac"]
-      },
-      {
-        name: "Souris gaming",
-        category: "Souris",
-        emoji: "🖱️",
-        price: 39,
-        desc: "Une souris pensée pour les sessions de jeu.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Souris gaming sans fil",
-        category: "Souris",
-        emoji: "🖱️",
-        price: 69,
-        desc: "Une souris sans fil pour garder un bureau dégagé.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Écran gaming 24 pouces",
-        category: "Écrans",
-        emoji: "🖥️",
-        price: 149,
-        desc: "Un écran de bureau pour jouer et travailler.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Écran gaming 27 pouces",
-        category: "Écrans",
-        emoji: "🖥️",
-        price: 249,
-        desc: "Un écran plus grand pour profiter de tes jeux.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Casque gaming",
-        category: "Casques",
-        emoji: "🎧",
-        price: 49,
-        desc: "Un casque pour écouter le jeu et discuter avec tes amis.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Microphone USB",
-        category: "Audio",
-        emoji: "🎙️",
-        price: 59,
-        desc: "Un microphone USB pour les appels et les sessions de jeu.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "PC gaming",
-        category: "PC",
-        emoji: "🖥️",
-        price: 899,
-        desc: "Exemple de PC gaming. Vérifie les composants avant de comparer.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Carte graphique",
-        category: "Composants",
-        emoji: "🎮",
-        price: 399,
-        desc: "Un composant essentiel pour les performances graphiques.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      },
-      {
-        name: "Tapis de souris XL",
-        category: "Accessoires",
-        emoji: "🟪",
-        price: 19,
-        desc: "Un grand tapis pour ton clavier et ta souris.",
-        stores: ["Amazon", "Fnac", "Boulanger"]
-      }
-    ];
+  <h3>Catégories</h3>
+  <button class="drawer-link" data-drawer-category="Claviers" type="button">⌨️ Claviers</button>
+  <button class="drawer-link" data-drawer-category="Souris" type="button">🖱️ Souris</button>
+  <button class="drawer-link" data-drawer-category="Casques" type="button">🎧 Casques</button>
+  <button class="drawer-link" data-drawer-category="Écrans" type="button">🖥️ Écrans</button>
+  <button class="drawer-link" data-drawer-category="Accessoires" type="button">🎮 Accessoires</button>
 
-    const categories = [
-      "Toutes",
-      "PC",
-      "Claviers",
-      "Souris",
-      "Écrans",
-      "Casques",
-      "Audio",
-      "Composants",
-      "Accessoires"
-    ];
+  <h3>Nos boutiques</h3>
+  <a class="drawer-link" href="https://www.amazon.fr/" target="_blank" rel="noopener noreferrer">Amazon France ↗</a>
+  <a class="drawer-link" href="https://www.fnac.com/" target="_blank" rel="noopener noreferrer">Fnac ↗</a>
+  <a class="drawer-link" href="https://www.boulanger.com/" target="_blank" rel="noopener noreferrer">Boulanger ↗</a>
+  <a class="drawer-link" href="https://www.logitech.com/fr-fr" target="_blank" rel="noopener noreferrer">Logitech ↗</a>
 
-    const storeSearchUrls = {
-      Amazon: "https://www.amazon.fr/s?k=",
-      Fnac: "https://www.fnac.com/SearchResult/ResultList.aspx?Search=",
-      Boulanger: "https://www.boulanger.com/resultats?tr=",
-      Logitech: "https://www.logitech.com/fr-fr/search.html?q="
-    };
+  <div class="drawer-note">Les liens des boutiques ouvrent leurs sites officiels. Les prix du catalogue sont des exemples et ne sont pas actualisés automatiquement.</div>
+</aside>
 
-    const productGrid = document.getElementById("productGrid");
-    const searchInput = document.getElementById("searchInput");
-    const sortSelect = document.getElementById("sortSelect");
-    const categoryPills = document.getElementById("categoryPills");
-    const drawerCategories = document.getElementById("drawerCategories");
-    const resultCount = document.getElementById("resultCount");
-    const drawer = document.getElementById("drawer");
-    const drawerOverlay = document.getElementById("drawerOverlay");
-    const openMenuButton = document.getElementById("openMenu");
-    const closeMenuButton = document.getElementById("closeMenu");
-    const aiButton = document.getElementById("aiButton");
-    const toast = document.getElementById("toast");
-    const toastTitle = document.getElementById("toastTitle");
-    const toastMessage = document.getElementById("toastMessage");
+<div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="drawer-header">
+      <h2 id="modalTitle">Détails du produit</h2>
+      <button class="close-button" id="closeModal" type="button" aria-label="Fermer">×</button>
+    </div>
+    <p id="modalDescription"></p>
+    <div id="modalSpecs"></div>
+    <div class="modal-actions">
+      <button class="details-button" id="cancelModal" type="button">Fermer</button>
+      <a class="store-link" id="modalStoreLink" href="https://www.amazon.fr/" target="_blank" rel="noopener noreferrer">Voir les boutiques ↗</a>
+    </div>
+  </div>
+</div>
 
-    let selectedCategory = "Toutes";
-    let selectedStores = [];
-    let toastTimeout;
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    function escapeHTML(value) {
-      return String(value).replace(/[&<>"']/g, function (character) {
-        const entities = {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        };
-        return entities[character];
-      });
-    }
+<script>
+"use strict";
 
-    function makeStoreUrl(store, productName) {
-      const baseUrl = storeSearchUrls[store];
-      return baseUrl + encodeURIComponent(productName);
-    }
+const products = [
+  {
+    id:1, name:"Logitech G413 SE", category:"Claviers", price:79.99,
+    emoji:"⌨️", rating:4.5,
+    description:"Clavier mécanique avec une conception robuste et un éclairage discret.",
+    specs:["Type : clavier mécanique","Connexion : USB filaire","Usage : gaming et bureautique"],
+    store:"https://www.amazon.fr/s?k=Logitech+G413+SE"
+  },
+  {
+    id:2, name:"Logitech G PRO X Superlight", category:"Souris", price:119.99,
+    emoji:"🖱️", rating:4.7,
+    description:"Souris gaming sans fil conçue pour la précision et la réactivité.",
+    specs:["Type : souris gaming","Connexion : sans fil","Usage : FPS et jeux compétitifs"],
+    store:"https://www.amazon.fr/s?k=Logitech+G+PRO+X+Superlight"
+  },
+  {
+    id:3, name:"HyperX Cloud III", category:"Casques", price:99.99,
+    emoji:"🎧", rating:4.6,
+    description:"Casque gaming avec microphone intégré pour jouer et discuter.",
+    specs:["Type : casque gaming","Connexion : filaire","Usage : PC et consoles compatibles"],
+    store:"https://www.amazon.fr/s?k=HyperX+Cloud+III"
+  },
+  {
+    id:4, name:"SteelSeries Apex 3", category:"Claviers", price:69.99,
+    emoji:"⌨️", rating:4.4,
+    description:"Clavier gaming avec éclairage RGB et commandes multimédias.",
+    specs:["Type : clavier gaming","Connexion : USB filaire","Éclairage : RGB"],
+    store:"https://www.amazon.fr/s?k=SteelSeries+Apex+3"
+  },
+  {
+    id:5, name:"Razer DeathAdder Essential", category:"Souris", price:29.99,
+    emoji:"🖱️", rating:4.3,
+    description:"Souris filaire pensée pour un usage gaming polyvalent.",
+    specs:["Type : souris gaming","Connexion : USB filaire","Design : ergonomique"],
+    store:"https://www.amazon.fr/s?k=Razer+DeathAdder+Essential"
+  },
+  {
+    id:6, name:"Logitech G435", category:"Casques", price:59.99,
+    emoji:"🎧", rating:4.2,
+    description:"Casque sans fil léger pour jouer et écouter de la musique.",
+    specs:["Type : casque sans fil","Microphone : intégré","Usage : gaming et multimédia"],
+    store:"https://www.amazon.fr/s?k=Logitech+G435"
+  },
+  {
+    id:7, name:"Écran gaming 144 Hz", category:"Écrans", price:179.99,
+    emoji:"🖥️", rating:4.4,
+    description:"Exemple de catégorie pour comparer des écrans gaming à fréquence élevée.",
+    specs:["Type : écran gaming (exemple)","Fréquence : 144 Hz (exemple)","Vérifie les caractéristiques du modèle vendu"],
+    store:"https://www.amazon.fr/s?k=ecran+gaming+144hz"
+  },
+  {
+    id:8, name:"Tapis de souris XXL", category:"Accessoires", price:19.99,
+    emoji:"🎮", rating:4.3,
+    description:"Grand tapis de souris pour aménager ton espace de jeu.",
+    specs:["Type : tapis de souris (exemple)","Format : XXL (exemple)","Vérifie les dimensions avant achat"],
+    store:"https://www.amazon.fr/s?k=tapis+souris+XXL"
+  },
+  {
+    id:9, name:"Support casque gaming", category:"Accessoires", price:14.99,
+    emoji:"🎧", rating:4.1,
+    description:"Accessoire de bureau pour ranger un casque entre deux parties.",
+    specs:["Type : support de casque (exemple)","Installation : bureau","Vérifie la compatibilité du modèle"],
+    store:"https://www.amazon.fr/s?k=support+casque+gaming"
+  }
+];
 
-    function openDrawer() {
-      drawer.classList.add("open");
-      drawerOverlay.hidden = false;
-      drawer.setAttribute("aria-hidden", "false");
-      openMenuButton.setAttribute("aria-expanded", "true");
-      document.body.classList.add("menu-open");
-      closeMenuButton.focus();
-    }
+const grid = document.getElementById("productGrid");
+const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
+const resultCount = document.getElementById("resultCount");
+const filterButtons = [...document.querySelectorAll(".filter-button")];
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("overlay");
+const toast = document.getElementById("toast");
+const productModal = document.getElementById("productModal");
 
-    function closeDrawer() {
-      drawer.classList.remove("open");
-      drawerOverlay.hidden = true;
-      drawer.setAttribute("aria-hidden", "true");
-      openMenuButton.setAttribute("aria-expanded", "false");
-      document.body.classList.remove("menu-open");
-      openMenuButton.focus();
-    }
+let activeCategory = "Tous";
+let toastTimeout;
 
-    function showToast(title, message) {
-      toastTitle.textContent = title;
-      toastMessage.textContent = message;
-      toast.hidden = false;
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(function () {
-        toast.hidden = true;
-      }, 4500);
-    }
+function formatPrice(price) {
+  return new Intl.NumberFormat("fr-FR", {
+    style:"currency", currency:"EUR"
+  }).format(price);
+}
 
-    function renderCategories() {
-      categoryPills.innerHTML = categories.map(function (category) {
-        const active = category === selectedCategory ? " active" : "";
-        return `
-          <button
-            type="button"
-            class="category-pill${active}"
-            data-category="${escapeHTML(category)}"
-            aria-pressed="${category === selectedCategory}"
-          >${escapeHTML(category)}</button>
-        `;
-      }).join("");
+function showToast(message) {
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove("show"), 3200);
+}
 
-      drawerCategories.innerHTML = categories.map(function (category) {
-        const active = category === selectedCategory ? " active" : "";
-        return `
-          <button
-            type="button"
-            class="drawer-category${active}"
-            data-category="${escapeHTML(category)}"
-            aria-pressed="${category === selectedCategory}"
-          >${category === "Toutes" ? "✨ Toutes les catégories" : escapeHTML(category)}</button>
-        `;
-      }).join("");
-    }
+function renderProducts() {
+  const term = searchInput.value.trim().toLocaleLowerCase("fr");
+  let visible = products.filter(product => {
+    const matchesCategory = activeCategory === "Tous" || product.category === activeCategory;
+    const searchable = `${product.name} ${product.category} ${product.description}`.toLocaleLowerCase("fr");
+    return matchesCategory && searchable.includes(term);
+  });
 
-    function getFilteredProducts() {
-      const query = searchInput.value.trim().toLocaleLowerCase("fr");
-      let results = products.filter(function (product) {
-        const matchesCategory =
-          selectedCategory === "Toutes" || product.category === selectedCategory;
+  switch (sortSelect.value) {
+    case "price-asc":
+      visible.sort((a,b) => a.price - b.price);
+      break;
+    case "price-desc":
+      visible.sort((a,b) => b.price - a.price);
+      break;
+    case "name":
+      visible.sort((a,b) => a.name.localeCompare(b.name,"fr"));
+      break;
+    default:
+      visible.sort((a,b) => a.id - b.id);
+  }
 
-        const searchableText =
-          (product.name + " " + product.category + " " + product.desc)
-            .toLocaleLowerCase("fr");
+  resultCount.textContent = `${visible.length} produit${visible.length > 1 ? "s" : ""} trouvé${visible.length > 1 ? "s" : ""}`;
+  grid.replaceChildren();
 
-        const matchesSearch = searchableText.includes(query);
+  if (visible.length === 0) {
+    const empty = document.createElement("div");
+    empty.className = "empty-state";
+    empty.textContent = "Aucun produit trouvé. Essaie un autre mot ou une autre catégorie.";
+    grid.appendChild(empty);
+    return;
+  }
 
-        const matchesStores =
-          selectedStores.length === 0 ||
-          selectedStores.some(function (store) {
-            return product.stores.includes(store);
-          });
+  visible.forEach(product => {
+    const card = document.createElement("article");
+    card.className = "product-card";
 
-        return matchesCategory && matchesSearch && matchesStores;
-      });
+    const visual = document.createElement("div");
+    visual.className = "product-visual";
+    const emoji = document.createElement("span");
+    emoji.className = "product-emoji";
+    emoji.setAttribute("aria-hidden","true");
+    emoji.textContent = product.emoji;
+    visual.appendChild(emoji);
 
-      if (sortSelect.value === "low") {
-        results.sort(function (a, b) {
-          return a.price - b.price;
-        });
-      } else if (sortSelect.value === "high") {
-        results.sort(function (a, b) {
-          return b.price - a.price;
-        });
-      } else if (sortSelect.value === "name") {
-        results.sort(function (a, b) {
-          return a.name.localeCompare(b.name, "fr");
-        });
-      }
+    const body = document.createElement("div");
+    body.className = "product-body";
 
-      return results;
-    }
+    const top = document.createElement("div");
+    top.className = "product-topline";
 
-    function renderProducts() {
-      const results = getFilteredProducts();
+    const category = document.createElement("span");
+    category.className = "category-label";
+    category.textContent = product.category;
 
-      resultCount.textContent =
-        results.length + (results.length > 1 ? " produits affichés" : " produit affiché");
+    const rating = document.createElement("span");
+    rating.className = "rating";
+    rating.textContent = `★ ${product.rating.toFixed(1)}`;
 
-      if (results.length === 0) {
-        productGrid.innerHTML = `
-          <div class="empty-state">
-            <h3>Aucun produit trouvé</h3>
-            <p>Essaie un autre mot-clé ou réinitialise les filtres du menu.</p>
-          </div>
-        `;
-        return;
-      }
+    top.append(category,rating);
 
-      productGrid.innerHTML = results.map(function (product) {
-        const name = escapeHTML(product.name);
-        const category = escapeHTML(product.category);
-        const description = escapeHTML(product.desc);
-        const emoji = escapeHTML(product.emoji);
-        const price = product.price.toLocaleString("fr-FR", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
+    const title = document.createElement("h3");
+    title.textContent = product.name;
 
-        const storeLinks = product.stores.map(function (store) {
-          const safeStore = escapeHTML(store);
-          const url = makeStoreUrl(store, product.name);
-          const officialClass = store === "Logitech" ? " official" : "";
+    const description = document.createElement("p");
+    description.className = "product-description";
+    description.textContent = product.description;
 
-          return `
-            <a
-              class="store-link${officialClass}"
-              href="${url}"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Rechercher ${name} sur ${safeStore}"
-            >${safeStore} ↗</a>
-          `;
-        }).join("");
+    const bottom = document.createElement("div");
+    bottom.className = "product-bottom";
 
-        return `
-          <article class="product-card">
-            <div class="product-art" aria-hidden="true">${emoji}</div>
-            <div class="product-body">
-              <span class="product-category">${category}</span>
-              <h3>${name}</h3>
-              <p class="product-description">${description}</p>
-              <div class="price-row">
-                <span class="price">~${price} €</span>
-                <span class="price-note">EXEMPLE</span>
-              </div>
-              <div class="store-links">${storeLinks}</div>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
+    const priceLine = document.createElement("div");
+    priceLine.className = "price-line";
 
-    function setCategory(category) {
-      if (!categories.includes(category)) return;
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = formatPrice(product.price);
 
-      selectedCategory = category;
-      renderCategories();
-      renderProducts();
-    }
+    const demo = document.createElement("span");
+    demo.className = "demo-label";
+    demo.textContent = "Prix démo";
 
-    openMenuButton.addEventListener("click", openDrawer);
-    closeMenuButton.addEventListener("click", closeDrawer);
-    drawerOverlay.addEventListener("click", closeDrawer);
+    priceLine.append(price,demo);
 
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape" && drawer.classList.contains("open")) {
-        closeDrawer();
-      }
-    });
+    const actions = document.createElement("div");
+    actions.className = "product-actions";
 
-    document.getElementById("heroMenu").addEventListener("click", function () {
-      openDrawer();
-    });
+    const store = document.createElement("a");
+    store.className = "store-link";
+    store.href = product.store;
+    store.target = "_blank";
+    store.rel = "noopener noreferrer";
+    store.textContent = "Comparer ↗";
 
-    categoryPills.addEventListener("click", function (event) {
-      const button = event.target.closest("[data-category]");
-      if (button) setCategory(button.dataset.category);
-    });
+    const details = document.createElement("button");
+    details.className = "details-button";
+    details.type = "button";
+    details.textContent = "Détails";
+    details.addEventListener("click", () => openProductDetails(product.id));
 
-    drawerCategories.addEventListener("click", function (event) {
-      const button = event.target.closest("[data-category]");
-      if (!button) return;
+    actions.append(store,details);
+    bottom.append(priceLine,actions);
+    body.append(top,title,description,bottom);
+    card.append(visual,body);
+    grid.appendChild(card);
+  });
+}
 
-      setCategory(button.dataset.category);
-      closeDrawer();
-      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
-    });
+function setCategory(category) {
+  activeCategory = category;
+  filterButtons.forEach(button => {
+    button.classList.toggle("active",button.dataset.category === category);
+  });
+  renderProducts();
+}
 
-    searchInput.addEventListener("input", renderProducts);
-    sortSelect.addEventListener("change", renderProducts);
+filterButtons.forEach(button => {
+  button.addEventListener("click", () => setCategory(button.dataset.category));
+});
 
-    document.getElementById("applyFilters").addEventListener("click", function () {
-      selectedStores = Array.from(
-        document.querySelectorAll(".store-filter:checked")
-      ).map(function (checkbox) {
-        return checkbox.value;
-      });
+searchInput.addEventListener("input",renderProducts);
+sortSelect.addEventListener("change",renderProducts);
 
-      renderProducts();
-      closeDrawer();
-      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
-    });
+function openMenu() {
+  drawer.classList.add("open");
+  overlay.classList.add("open");
+  drawer.setAttribute("aria-hidden","false");
+  document.getElementById("openMenu").setAttribute("aria-expanded","true");
+  document.body.classList.add("locked");
+  document.getElementById("closeMenu").focus();
+}
 
-    document.getElementById("resetFilters").addEventListener("click", function () {
-      selectedCategory = "Toutes";
-      selectedStores = [];
-      searchInput.value = "";
-      sortSelect.value = "default";
+function closeMenu() {
+  drawer.classList.remove("open");
+  overlay.classList.remove("open");
+  drawer.setAttribute("aria-hidden","true");
+  document.getElementById("openMenu").setAttribute("aria-expanded","false");
+  document.body.classList.remove("locked");
+}
 
-      document.querySelectorAll(".store-filter").forEach(function (checkbox) {
-        checkbox.checked = false;
-      });
+document.getElementById("openMenu").addEventListener("click",openMenu);
+document.getElementById("closeMenu").addEventListener("click",closeMenu);
+overlay.addEventListener("click",closeMenu);
 
-      renderCategories();
-      renderProducts();
-    });
+document.querySelectorAll("[data-target]").forEach(button => {
+  button.addEventListener("click",() => {
+    const target = document.getElementById(button.dataset.target);
+    closeMenu();
+    if (target) target.scrollIntoView({behavior:"smooth"});
+  });
+});
 
-    aiButton.addEventListener("click", function () {
-      showToast(
-        "✦ IA Assistance",
-        "L'assistance IA arrive bientôt sur KeyPick. Elle n'est pas encore connectée."
-      );
-    });
+document.querySelectorAll("[data-drawer-category]").forEach(button => {
+  button.addEventListener("click",() => {
+    setCategory(button.dataset.drawerCategory);
+    closeMenu();
+    document.getElementById("catalogue").scrollIntoView({behavior:"smooth"});
+  });
+});
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+document.querySelectorAll(".drawer a").forEach(link => {
+  link.addEventListener("click",closeMenu);
+});
 
-    renderCategories();
-    renderProducts();
-  </script>
+document.getElementById("aiButton").addEventListener("click",() => {
+  showToast("✦ IA Assistance arrive bientôt ! Cette fonctionnalité n'est pas encore activée.");
+});
+
+function openProductDetails(id) {
+  const product = products.find(item => item.id === id);
+  if (!product) return;
+
+  document.getElementById("modalTitle").textContent = product.name;
+  document.getElementById("modalDescription").textContent = product.description;
+
+  const specs = document.getElementById("modalSpecs");
+  specs.replaceChildren();
+
+  const category = document.createElement("p");
+  category.textContent = `Catégorie : ${product.category}`;
+
+  const price = document.createElement("p");
+  price.textContent = `Prix indicatif de démonstration : ${formatPrice(product.price)}`;
+
+  const list = document.createElement("ul");
+  product.specs.forEach(text => {
+    const item = document.createElement("li");
+    item.textContent = text;
+    list.appendChild(item);
+  });
+
+  specs.append(category,price,list);
+  document.getElementById("modalStoreLink").href = product.store;
+  productModal.classList.add("open");
+  document.body.classList.add("locked");
+  document.getElementById("closeModal").focus();
+}
+
+function closeProductModal() {
+  productModal.classList.remove("open");
+  if (!drawer.classList.contains("open")) document.body.classList.remove("locked");
+}
+
+document.getElementById("closeModal").addEventListener("click",closeProductModal);
+document.getElementById("cancelModal").addEventListener("click",closeProductModal);
+
+productModal.addEventListener("click",event => {
+  if (event.target === productModal) closeProductModal();
+});
+
+document.addEventListener("keydown",event => {
+  if (event.key === "Escape") {
+    closeMenu();
+    closeProductModal();
+  }
+});
+
+document.getElementById("year").textContent = new Date().getFullYear();
+
+renderProducts();
+</script>
 </body>
 </html>
